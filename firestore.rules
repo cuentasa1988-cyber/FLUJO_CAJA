@@ -1,0 +1,57 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global Safety Net: default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128;
+    }
+
+    // Test connection endpoint for health check
+    match /test/{docId} {
+      allow read, write: if isSignedIn();
+    }
+
+    // User profile and settings
+    match /users/{userId} {
+      allow read, write: if isValidId(userId) && isOwner(userId);
+
+      // Transactions subcollection
+      match /transactions/{transactionId} {
+        allow read, write: if isValidId(userId) && isOwner(userId) && isValidId(transactionId);
+      }
+
+      // Accounts payable subcollection
+      match /payables/{payableId} {
+        allow read, write: if isValidId(userId) && isOwner(userId) && isValidId(payableId);
+      }
+
+      // Accounts receivable subcollection
+      match /receivables/{receivableId} {
+        allow read, write: if isValidId(userId) && isOwner(userId) && isValidId(receivableId);
+      }
+
+      // Cash drawer audit sessions
+      match /auditSessions/{sessionId} {
+        allow read, write: if isValidId(userId) && isOwner(userId) && isValidId(sessionId);
+      }
+
+      // Any custom company subcollections (categories, accounts)
+      match /{allChildren=**} {
+        allow read, write: if isValidId(userId) && isOwner(userId);
+      }
+    }
+  }
+}

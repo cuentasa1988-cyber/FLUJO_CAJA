@@ -1,0 +1,6 @@
+{
+  "name": "Control Center - CashFlow Pro",
+  "description": "Sistema integral de flujo de caja real, conciliación diaria, cuentas por pagar, distribución 4 bolsillos y proyecciones operativas.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

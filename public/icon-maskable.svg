@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bgGradMask" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F172A"/>
+      <stop offset="100%" stop-color="#020617"/>
+    </linearGradient>
+    <linearGradient id="tealGradMask" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34D399"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Full-bleed background for maskable -->
+  <rect width="512" height="512" fill="url(#bgGradMask)"/>
+
+  <!-- Inside 80% safe zone (center 256, 256; max span 400x400) -->
+  <g transform="translate(16, 16) scale(0.94)">
+    <!-- Upward Trend Dynamic Bar 1 -->
+    <rect x="146" y="270" width="44" height="110" rx="10" fill="#334155"/>
+    
+    <!-- Upward Trend Dynamic Bar 2 -->
+    <rect x="210" y="210" width="44" height="170" rx="10" fill="#0284C7"/>
+    
+    <!-- Upward Trend Dynamic Bar 3 -->
+    <rect x="274" y="150" width="44" height="230" rx="10" fill="url(#tealGradMask)"/>
+
+    <!-- Dynamic Flow Arrow / Swoosh -->
+    <path d="M130 280 C190 230, 240 180, 345 135" fill="none" stroke="url(#tealGradMask)" stroke-width="18" stroke-linecap="round"/>
+    
+    <!-- Arrowhead -->
+    <polygon points="345,115 375,140 340,160" fill="#34D399"/>
+
+    <!-- Cashflow circle badge (currency node) -->
+    <circle cx="365" cy="325" r="40" fill="url(#tealGradMask)"/>
+    <text x="365" y="340" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="40" font-weight="900" fill="#064E3B" text-anchor="middle">$</text>
+  </g>
+</svg>

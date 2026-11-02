@@ -1,0 +1,245 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User account profile and company cashflow preferences",
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "description": "User email address"
+        },
+        "displayName": {
+          "type": "string",
+          "description": "Display name of the user or business"
+        },
+        "currency": {
+          "type": "string",
+          "description": "Currency code such as CLP"
+        },
+        "currencySymbol": {
+          "type": "string",
+          "description": "Symbol for currency like $"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "ISO timestamp of last update"
+        }
+      },
+      "required": ["email"]
+    },
+    "Transaction": {
+      "title": "Transaction",
+      "description": "Income or expense financial entry",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique transaction ID"
+        },
+        "userId": {
+          "type": "string",
+          "description": "Owner user UID"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["income", "expense", "capital_contribution", "partner_withdrawal"],
+          "description": "Transaction type"
+        },
+        "grossAmount": {
+          "type": "number",
+          "description": "Gross amount in transaction"
+        },
+        "netAmount": {
+          "type": "number",
+          "description": "Net amount received or paid"
+        },
+        "feeAmount": {
+          "type": "number",
+          "description": "Gateway or bank fee"
+        },
+        "ivaAmount": {
+          "type": "number",
+          "description": "19% Chilean IVA amount"
+        },
+        "channel": {
+          "type": "string",
+          "description": "Payment channel (cash, bank_transfer, debit_card, credit_card, etc.)"
+        },
+        "category": {
+          "type": "string",
+          "description": "Category name"
+        },
+        "description": {
+          "type": "string",
+          "description": "Concept or description"
+        },
+        "date": {
+          "type": "string",
+          "description": "Date ISO string"
+        },
+        "docType": {
+          "type": "string",
+          "description": "Tax document type: boleta, factura, exento, etc."
+        },
+        "folio": {
+          "type": "string",
+          "description": "Document folio number"
+        },
+        "client": {
+          "type": "string",
+          "description": "Client or provider name"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Creation timestamp"
+        }
+      },
+      "required": ["id", "userId", "type", "grossAmount", "date"]
+    },
+    "Payable": {
+      "title": "Payable",
+      "description": "Accounts payable to suppliers",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique payable ID"
+        },
+        "userId": {
+          "type": "string",
+          "description": "Owner user UID"
+        },
+        "supplier": {
+          "type": "string",
+          "description": "Supplier name"
+        },
+        "description": {
+          "type": "string",
+          "description": "Expense description"
+        },
+        "amount": {
+          "type": "number",
+          "description": "Total amount"
+        },
+        "dueDate": {
+          "type": "string",
+          "description": "Due date ISO string"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["pending", "paid", "partial", "overdue"],
+          "description": "Status of the payable"
+        },
+        "hasFactura": {
+          "type": "boolean",
+          "description": "Whether document has factura with recoverable tax credit"
+        },
+        "installmentsCount": {
+          "type": "number",
+          "description": "Total number of installments"
+        },
+        "installments": {
+          "type": "array",
+          "description": "Array of installment objects"
+        }
+      },
+      "required": ["id", "userId", "supplier", "amount", "dueDate", "status"]
+    },
+    "Receivable": {
+      "title": "Receivable",
+      "description": "Accounts receivable from clients",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique receivable ID"
+        },
+        "userId": {
+          "type": "string",
+          "description": "Owner user UID"
+        },
+        "client": {
+          "type": "string",
+          "description": "Client name"
+        },
+        "concept": {
+          "type": "string",
+          "description": "Concept description"
+        },
+        "totalAmount": {
+          "type": "number",
+          "description": "Total receivable amount"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["pending", "partial", "completed"],
+          "description": "Collection status"
+        },
+        "installments": {
+          "type": "array",
+          "description": "List of installment milestones"
+        },
+        "docType": {
+          "type": "string",
+          "description": "Document type like boleta or factura"
+        }
+      },
+      "required": ["id", "userId", "client", "totalAmount", "status"]
+    },
+    "AuditSession": {
+      "title": "AuditSession",
+      "description": "Cash audit and drawer closing balance session",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique session ID"
+        },
+        "userId": {
+          "type": "string",
+          "description": "Owner user UID"
+        },
+        "date": {
+          "type": "string",
+          "description": "Date of audit"
+        },
+        "theoreticalCash": {
+          "type": "number",
+          "description": "Theoretical system balance"
+        },
+        "realCash": {
+          "type": "number",
+          "description": "Counted physical cash"
+        },
+        "difference": {
+          "type": "number",
+          "description": "Discrepancy"
+        }
+      },
+      "required": ["id", "userId", "date", "theoreticalCash", "realCash"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User company preferences and profile"
+    },
+    "/users/{userId}/transactions/{transactionId}": {
+      "schema": "Transaction",
+      "description": "Individual transaction documents owned by user"
+    },
+    "/users/{userId}/payables/{payableId}": {
+      "schema": "Payable",
+      "description": "Supplier bills and payables owned by user"
+    },
+    "/users/{userId}/receivables/{receivableId}": {
+      "schema": "Receivable",
+      "description": "Client invoices and collections owned by user"
+    },
+    "/users/{userId}/auditSessions/{sessionId}": {
+      "schema": "AuditSession",
+      "description": "Daily cash counts and register audits"
+    }
+  }
+}
